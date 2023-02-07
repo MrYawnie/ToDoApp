@@ -1,0 +1,12 @@
+.active > div > label {
+    text-decoration: line-through;
+}
+
+#todo-items-container > .list-group-item.active {
+    background-color: #C0C0C0 !important;
+    border-color: white !important;
+}
+
+#form-wrapper {
+    background-color: goldenrod !important;
+}
