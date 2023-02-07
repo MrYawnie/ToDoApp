@@ -2,6 +2,7 @@ const todoItemsContainer = document.getElementById('todo-items-container');
 const todoItemForm = document.getElementById('form-todo-items');
 const todoItemInput = todoItemForm['todo-item'];
 
+
 const randomId = () => Math.floor(Math.random() * 100000000);
 
 const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [];
@@ -16,6 +17,12 @@ const addItem = (name, id) => {
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
 
     return { name, id };
+}
+
+const todoItemsLeftCount = () => {
+    const todoItemsLeft = todoItems.filter(item => !item.complete).length;
+    const todoItemsLeftSpan = document.getElementById('todo-items-count');
+    todoItemsLeftSpan.innerText = todoItemsLeft;
 }
 
 const createToDoElement = ({ name, id, complete }) => {
@@ -38,18 +45,30 @@ const createToDoElement = ({ name, id, complete }) => {
     todoItemLabel.innerText = name;
     todoItemLabel.classList.add('form-check-label');
 
+    // remove to-do items when double clicked, save status to localStorage
+    todoItemElement.ondblclick = function () {
+        console.log('double clicked');
+        this.remove();
+        let index = todoItems.findIndex(item => item.id === id);
+        todoItems.splice(index, 1);
+        localStorage.setItem('todoItems', JSON.stringify(todoItems));
+        todoItemsLeftCount();
+    }
+    
     // Toggle to-do items when clicked, save status to localStorage
     todoItemElement.onclick = function () {
+        console.log('clicked');
         this.classList.toggle("active");
         todoItems.forEach(item => { if (item.id === id) item.complete = !item.complete });
         localStorage.setItem('todoItems', JSON.stringify(todoItems));
+        todoItemsLeftCount();
     }
     
     // Append to-do items to the DOM
     todoItemElement.appendChild(todoItemWrapper);
     todoItemWrapper.appendChild(todoItemLabel);
     todoItemsContainer.appendChild(todoItemElement);
-   
+    todoItemsLeftCount();
 }
 
 todoItems.forEach(createToDoElement);

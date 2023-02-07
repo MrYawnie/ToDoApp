@@ -33,12 +33,15 @@
             <div class="col-8 border">
                 <h2>ToDo Items</h2>
                 <ul class="list-group py-2" id="todo-items-container">
-                    <li class="list-group-item" id="form-wrapper">
+                    <li class="list-group-item d-flex justify-content-around" id="form-wrapper">
                         <form id="form-todo-items" action="" class="">
                             <input type="submit" value="+" class="">
                             <input id="todo-item-input" type="text" class="rounded" name="todo-item"
                                 placeholder="Add ToDo Item">
                         </form>
+                        <div class="list-statistics">
+                            <span id="todo-items-count"></span> items left
+                        </div>
                     </li>
                     <!-- ToDo Items will be generated here as list items -->
                 </ul>
