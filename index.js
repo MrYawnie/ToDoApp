@@ -1,6 +1,7 @@
 const todoItemsContainer = document.getElementById('todo-items-container');
 const todoItemForm = document.getElementById('form-todo-items');
 const todoItemInput = todoItemForm['todo-item'];
+const incorrectEntry = document.getElementById('incorrect-entry');
 
 
 const randomId = () => Math.floor(Math.random() * 100000000);
@@ -77,8 +78,13 @@ todoItems.forEach(createToDoElement);
 todoItemForm.onsubmit = (e) => {
     e.preventDefault();
     
-    if (todoItemInput.value === '') return;
-    
+    if (todoItemInput.value === '' || todoItemInput.value.length < 3) {
+        incorrectEntry.innerText = ' * Please enter a valid to-do item (over 2 char)';
+        todoItemInput.style.border = '3px solid red';
+        return;
+    }
+    incorrectEntry.innerText = '';
+    todoItemInput.style.border = '';
     const newItem = addItem(
         todoItemInput.value,
         randomId()

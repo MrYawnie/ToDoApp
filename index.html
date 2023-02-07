@@ -33,13 +33,13 @@
             <div class="col-8 border">
                 <h2>ToDo Items</h2>
                 <ul class="list-group py-2" id="todo-items-container">
-                    <li class="list-group-item d-flex justify-content-around" id="form-wrapper">
-                        <form id="form-todo-items" action="" class="">
+                    <li class="list-group-item d-flex justify-content-between" id="form-wrapper">
+                        <form id="form-todo-items" action="" class="px-5">
                             <input type="submit" value="+" class="">
                             <input id="todo-item-input" type="text" class="rounded" name="todo-item"
-                                placeholder="Add ToDo Item">
+                                placeholder="Add ToDo Item"><span id="incorrect-entry"></span>
                         </form>
-                        <div class="list-statistics">
+                        <div class="list-statistics px-5">
                             <span id="todo-items-count"></span> items left
                         </div>
                     </li>
