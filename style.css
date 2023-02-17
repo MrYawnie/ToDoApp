@@ -7,6 +7,11 @@
     border-color: white !important;
 }
 
+#todo-lists-container > * :checked + label {
+    font-weight: bold;
+    text-align: start;
+}
+
 #form-wrapper {
     background-color: goldenrod !important;
 }

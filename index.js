@@ -12,8 +12,50 @@ const incorrectEntry = document.getElementById('incorrect-entry');
 
 const randomId = () => Math.floor(Math.random() * 100000000);
 
-const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [];
-const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [];
+const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [{
+    name: 'Click to toggle between complete / uncomplete',
+    id: randomId(),
+    listId: 123456789,
+    complete: true
+}, {
+    name: 'Hover over to reveal the remove button...',
+    id: randomId(),
+    listId: 123456789,
+    complete: false
+}, {
+    name: '... or simply double click to remove an item!',
+    id: randomId(),
+    listId: 123456789,
+    complete: false
+}, {
+    name: 'Add more lists on the sidepanel ↖',
+    id: randomId(),
+    listId: 123456789,
+    complete: false
+}, {
+    name: '... to reveal selected list\'s to-do items...',
+    id: randomId(),
+    listId: 987654321,
+    complete: false
+}, {
+    name: '... all of which are saved to localStorage!',
+    id: randomId(),
+    listId: 987654321,
+    complete: false
+}, {
+    name: 'And don\'t forget to use the filters above! ⬆ ',
+    id: randomId(),
+    listId: 987654321,
+    complete: false
+}
+];
+const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [{
+    name: 'Tutorial',
+    id: 123456789
+}, {
+    name: 'Click to open secondary lists',
+    id: 987654321
+}];
 
 // active list
 const activeList = () => {
@@ -156,13 +198,14 @@ const createToDoListElement = ({ name, id }) => {
     if (i === 0) {
         todoListRadio.setAttribute('checked', 'checked');
     }
-    // todoListRadio.classList.add('visually-hidden');
+    todoListRadio.classList.add('visually-hidden');
     
     // Create name label for each list item
     const todoListLabel = document.createElement('label');
     todoListLabel.htmlFor = id;
     todoListLabel.innerText = name;
     todoListLabel.classList.add('form-check-label');
+    todoListLabel.classList.add('list-group-label');
 
     // Create remove button for each list item
     const todoListRemoveButton = document.createElement('button');
