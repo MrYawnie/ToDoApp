@@ -1,14 +1,27 @@
 const todoItemsContainer = document.getElementById('todo-items-container');
 const todoItemForm = document.getElementById('form-todo-items');
 const todoItemInput = todoItemForm['todo-item'];
-const selectedList = document.getElementById('selected-list');
+
+const todoListsContainer = document.getElementById('todo-lists-container');
+const todoListForm = document.getElementById('form-todo-lists');
+const todoListInput = todoListForm['todo-list'];
+
+
 const incorrectEntry = document.getElementById('incorrect-entry');
 
 
 const randomId = () => Math.floor(Math.random() * 100000000);
 
 const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [];
+const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [];
 
+// active list
+const activeList = () => {
+    const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
+    return parseInt(checkedList.id);
+}
+
+// Save to-do items to localStorage
 const addItem = (name, id, listId) => {
     todoItems.push({
         name: name,
@@ -22,12 +35,25 @@ const addItem = (name, id, listId) => {
     return { name, id, listId };
 }
 
+// Save todo lists to localStorage
+const addList = (name, id) => {
+    todoLists.push({
+        name: name,
+        id: id
+    });
+
+    localStorage.setItem('todoLists', JSON.stringify(todoLists));
+
+    return { name, id };
+}
+
 const todoItemsLeftCount = () => {
-    const todoItemsLeft = todoItems.filter(item => !item.complete).length;
+    const todoItemsLeft = todoItems.filter(item => !item.complete && item.listId === activeList()).length;
     const todoItemsLeftSpan = document.getElementById('todo-items-count');
     todoItemsLeftSpan.innerText = todoItemsLeft;
 }
 
+// Create to-do items for selected list
 const createToDoElement = ({ name, id, listId, complete }) => {
 
     // Create li-element for each to-do item
@@ -107,6 +133,82 @@ const createToDoElement = ({ name, id, listId, complete }) => {
     todoItemsLeftCount();
 }
 
+// Create list items
+const createToDoListElement = ({ name, id }) => {
+    // Create li-element for each list item
+    const todoListElement = document.createElement('li');
+    todoListElement.classList.add('list-group-item');
+    todoListElement.classList.add('list-group-item-action');
+
+    // Create div-wrapper for each list item
+    const todoListWrapper = document.createElement('div');
+    todoListWrapper.classList.add('form-check');
+    todoListWrapper.classList.add('d-flex');
+    todoListWrapper.classList.add('justify-content-between');
+
+    // Create radio input for each list item
+    const todoListRadio = document.createElement('input');
+    todoListRadio.type = 'radio';
+    todoListRadio.name = 'list-item-radio';
+    todoListRadio.id = id;
+    todoListRadio.classList.add('form-check-input');
+    let i = todoLists.findIndex(list => list.id === id);
+    if (i === 0) {
+        todoListRadio.setAttribute('checked', 'checked');
+    }
+    // todoListRadio.classList.add('visually-hidden');
+    
+    // Create name label for each list item
+    const todoListLabel = document.createElement('label');
+    todoListLabel.htmlFor = id;
+    todoListLabel.innerText = name;
+    todoListLabel.classList.add('form-check-label');
+
+    // Create remove button for each list item
+    const todoListRemoveButton = document.createElement('button');
+    todoListRemoveButton.classList.add('btn');
+    todoListRemoveButton.classList.add('btn-danger');
+    todoListRemoveButton.classList.add('btn-sm');
+    todoListRemoveButton.classList.add('float-right');
+    todoListRemoveButton.classList.add('remove');
+    todoListRemoveButton.innerText = 'Remove';
+    todoListRemoveButton.style.display = 'none';
+    todoListRemoveButton.onclick = function () {
+        console.log('clicked');
+        this.parentElement.parentElement.remove();
+        let index = todoLists.findIndex(item => item.id === id);
+        todoLists.splice(index, 1);
+        localStorage.setItem('todoLists', JSON.stringify(todoLists));
+    }
+
+
+    // remove to-do items when double clicked, save status to localStorage
+    todoListElement.ondblclick = function () {
+        console.log('double clicked');
+        this.remove();
+        let index = todoLists.findIndex(item => item.id === id);
+        todoLists.splice(index, 1);
+        localStorage.setItem('todoLists', JSON.stringify(todoLists));
+    }
+
+    // show remove button when mouse over to-do items
+    todoListElement.onmouseover = function () {
+        console.log('mouse over');
+        todoListRemoveButton.style.display = 'inline-block';
+    }
+
+    // hide remove button when mouse out to-do items
+    todoListElement.onmouseout = function () {
+        console.log('mouse out');
+        todoListRemoveButton.style.display = 'none';
+    }
+
+    // Append to-do items to the DOM
+    todoListElement.appendChild(todoListWrapper);
+    todoListWrapper.append(todoListRadio, todoListLabel, todoListRemoveButton);
+    todoListsContainer.appendChild(todoListElement);
+}
+
 // Add new item to to-do list
 todoItemForm.onsubmit = (e) => {
     e.preventDefault();
@@ -121,12 +223,33 @@ todoItemForm.onsubmit = (e) => {
     const newItem = addItem(
         todoItemInput.value,
         randomId(),
-        selectedList.value
+        activeList()
     );
 
     createToDoElement(newItem);
 
     todoItemForm.reset();
+}
+
+// Add new list
+todoListForm.onsubmit = (e) => {
+    e.preventDefault();
+
+    if (todoListInput.value === '' || todoListInput.value.length < 3) {
+        // incorrectEntry.innerText = ' * Please enter a valid to-do List (over 2 char)';
+        todoListInput.style.border = '3px solid red';
+        return;
+    }
+    // incorrectEntry.innerText = '';
+    todoListInput.style.border = '';
+    const newList = addList(
+        todoListInput.value,
+        randomId()
+    );
+
+    createToDoListElement(newList);
+
+    todoListForm.reset();
 }
 
 const drawTodoItems = () => {
@@ -136,17 +259,22 @@ const drawTodoItems = () => {
     todoItemsContainer.innerHTML = ''; // empty the list before drawing again
 
     if (drawActiveTasks) {
-        todoItems.forEach(item => { if (!item.complete) createToDoElement(item) });
+        todoItems.forEach(item => { if (!item.complete && item.listId === activeList()) createToDoElement(item) });
     } else if (drawCompletedTasks) {
-        todoItems.forEach(item => { if (item.complete) createToDoElement(item) });
+        todoItems.forEach(item => { if (item.complete && item.listId === activeList()) createToDoElement(item) });
     } else {
-        todoItems.forEach(createToDoElement); // draw all items (default)
-        // todoItems.forEach(item => { if (item.listId === selectedList.value) createToDoElement(item) }); // only draw selected list items
+        // todoItems.forEach(createToDoElement); // draw all items (default)
+        todoItems.forEach(item => { if (item.listId === activeList()) createToDoElement(item) }); // only draw selected list items
     }
     // empty the list before drawing
 
 }
 
+const drawTodoListItems = () => {
+    todoLists.forEach(createToDoListElement); // draw all items (default)
+}
+
 // Iterate through and draw all todo-items from localstorage to the DOM
 // Start the app, draw selected to-do items
 drawTodoItems();
+drawTodoListItems();

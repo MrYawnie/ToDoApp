@@ -15,6 +15,10 @@
     display: flex;
 }
 
+#form-todo-lists {
+    display: flex;
+}
+
 .todo-section-header {
     background-color: goldenrod !important;
     display: flex;
@@ -33,7 +37,7 @@
     border-radius: 5px;
 }
 
-#form-submit-btn {
+.form-submit-btn {
     font-size: 18px;
 
 }

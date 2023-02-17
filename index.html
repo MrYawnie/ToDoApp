@@ -16,25 +16,23 @@
             <h1>ToDo App</h1>
         </div>
         <div class="row">
-            <div class="col-4 border">
+            <div class="col-md-4 border">
                 <h2>ToDo Lists</h2>
                 <div class="todo-list-section-header">
                     <form id="form-todo-lists" action="" class="">
-                        <input type="button" value="+"><input type="text" placeholder="New ToDo List">
+                        <input type="button" value="+" class="border-end-0 rounded-start m-0 form-submit-btn">
+                        <input type="text" id="todo-list-input" class="rounded-end form-label m-0" name="todo-list" placeholder="New ToDo List">
                     </form>
                 </div>
-                <ul class="list-group py-2" id="todo-lists-container">
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
+                <ul class="list-group py-2" id="todo-lists-container" onchange="return drawTodoItems()">
+                    <!-- ToDo Lists will be generated here as list items -->
                 </ul>
             </div>
-            <div class="col-8 border">
+            <div class="col-md-8 border">
                 <h2>ToDo Items</h2>
                 <div class="todo-section-header">
                     <form id="form-todo-items" action="" class="">
-                        <input type="submit" value="+" id="form-submit-btn" class="border-end-0 rounded-start m-0">
+                        <input type="submit" value="+" class="border-end-0 rounded-start m-0 form-submit-btn">
                         <input id="todo-item-input" type="text" class="rounded-end form-label m-0" name="todo-item"
                             placeholder="Add ToDo Item"><span id="incorrect-entry"></span>
                         <input type="hidden" id="selected-list" value="123456">
