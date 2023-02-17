@@ -12,6 +12,11 @@
     text-align: start;
 }
 
+.list-group-label {
+    width: 100%;
+    text-align: start;
+}
+
 #form-wrapper {
     background-color: goldenrod !important;
 }
