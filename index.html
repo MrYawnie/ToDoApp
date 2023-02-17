@@ -18,12 +18,12 @@
         <div class="row">
             <div class="col-4 border">
                 <h2>ToDo Lists</h2>
+                <div class="todo-list-section-header">
+                    <form id="form-todo-lists" action="" class="">
+                        <input type="button" value="+"><input type="text" placeholder="New ToDo List">
+                    </form>
+                </div>
                 <ul class="list-group py-2" id="todo-lists-container">
-                    <li class="list-group-item active" aria-current="true">
-                        <form id="form-todo-lists" action="" class="">
-                            <input type="button" value="+"><input type="text" placeholder="New ToDo List">
-                        </form>
-                    </li>
                     <li class="list-group-item">A second item</li>
                     <li class="list-group-item">A third item</li>
                     <li class="list-group-item">A fourth item</li>
@@ -32,17 +32,29 @@
             </div>
             <div class="col-8 border">
                 <h2>ToDo Items</h2>
+                <div class="todo-section-header">
+                    <form id="form-todo-items" action="" class="">
+                        <input type="submit" value="+" id="form-submit-btn" class="border-end-0 rounded-start m-0">
+                        <input id="todo-item-input" type="text" class="rounded-end form-label m-0" name="todo-item"
+                            placeholder="Add ToDo Item"><span id="incorrect-entry"></span>
+                        <input type="hidden" id="selected-list" value="123456">
+                    </form>
+                    <div class="btn-group-sm" role="group" onchange="return drawTodoItems()">
+                        <input type="radio" class="btn-check" name="filter" id="filter-all-tasks" checked>
+                        <label class="btn btn-outline-secondary" for="filter-all-tasks"
+                            class="btn btn-outline-secondary">All</label>
+                        <input type="radio" class="btn-check" name="filter" id="filter-active-tasks">
+                        <label class="btn btn-outline-secondary" for="filter-active-tasks"
+                            class="btn btn-outline-success">Active</label>
+                        <input type="radio" class="btn-check" name="filter" id="filter-completed-tasks">
+                        <label class="btn btn-outline-secondary" for="filter-completed-tasks"
+                            class="btn btn-outline-success">Completed</label>
+                    </div>
+                    <div class="list-statistics px-5">
+                        <span id="todo-items-count"></span> items left
+                    </div>
+                </div>
                 <ul class="list-group py-2" id="todo-items-container">
-                    <li class="list-group-item d-flex justify-content-between" id="form-wrapper">
-                        <form id="form-todo-items" action="" class="px-5">
-                            <input type="submit" value="+" class="">
-                            <input id="todo-item-input" type="text" class="rounded" name="todo-item"
-                                placeholder="Add ToDo Item"><span id="incorrect-entry"></span>
-                        </form>
-                        <div class="list-statistics px-5">
-                            <span id="todo-items-count"></span> items left
-                        </div>
-                    </li>
                     <!-- ToDo Items will be generated here as list items -->
                 </ul>
             </div>

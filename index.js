@@ -1,6 +1,7 @@
 const todoItemsContainer = document.getElementById('todo-items-container');
 const todoItemForm = document.getElementById('form-todo-items');
 const todoItemInput = todoItemForm['todo-item'];
+const selectedList = document.getElementById('selected-list');
 const incorrectEntry = document.getElementById('incorrect-entry');
 
 
@@ -8,16 +9,17 @@ const randomId = () => Math.floor(Math.random() * 100000000);
 
 const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [];
 
-const addItem = (name, id) => {
+const addItem = (name, id, listId) => {
     todoItems.push({
         name: name,
         id: id,
+        listId: listId,
         complete: false
     });
 
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
 
-    return { name, id };
+    return { name, id, listId };
 }
 
 const todoItemsLeftCount = () => {
@@ -26,8 +28,8 @@ const todoItemsLeftCount = () => {
     todoItemsLeftSpan.innerText = todoItemsLeft;
 }
 
-const createToDoElement = ({ name, id, complete }) => {
-        
+const createToDoElement = ({ name, id, listId, complete }) => {
+
     // Create li-element for each to-do item
     const todoItemElement = document.createElement('li');
     todoItemElement.classList.add('list-group-item');
@@ -88,7 +90,7 @@ const createToDoElement = ({ name, id, complete }) => {
         console.log('mouse out');
         todoItemRemoveButton.style.display = 'none';
     }
-    
+
     // Toggle to-do items when clicked, save status to localStorage
     todoItemElement.onclick = function () {
         console.log('clicked');
@@ -97,7 +99,7 @@ const createToDoElement = ({ name, id, complete }) => {
         localStorage.setItem('todoItems', JSON.stringify(todoItems));
         todoItemsLeftCount();
     }
-    
+
     // Append to-do items to the DOM
     todoItemElement.appendChild(todoItemWrapper);
     todoItemWrapper.append(todoItemLabel, todoItemRemoveButton);
@@ -105,13 +107,10 @@ const createToDoElement = ({ name, id, complete }) => {
     todoItemsLeftCount();
 }
 
-// Iterate through and draw all todo-items from localstorage to the DOM
-todoItems.forEach(createToDoElement);
-
 // Add new item to to-do list
 todoItemForm.onsubmit = (e) => {
     e.preventDefault();
-    
+
     if (todoItemInput.value === '' || todoItemInput.value.length < 3) {
         incorrectEntry.innerText = ' * Please enter a valid to-do item (over 2 char)';
         todoItemInput.style.border = '3px solid red';
@@ -121,10 +120,33 @@ todoItemForm.onsubmit = (e) => {
     todoItemInput.style.border = '';
     const newItem = addItem(
         todoItemInput.value,
-        randomId()
+        randomId(),
+        selectedList.value
     );
 
     createToDoElement(newItem);
 
     todoItemForm.reset();
 }
+
+const drawTodoItems = () => {
+    const drawActiveTasks = document.getElementById('filter-active-tasks').checked;
+    const drawCompletedTasks = document.getElementById('filter-completed-tasks').checked;
+
+    todoItemsContainer.innerHTML = ''; // empty the list before drawing again
+
+    if (drawActiveTasks) {
+        todoItems.forEach(item => { if (!item.complete) createToDoElement(item) });
+    } else if (drawCompletedTasks) {
+        todoItems.forEach(item => { if (item.complete) createToDoElement(item) });
+    } else {
+        todoItems.forEach(createToDoElement); // draw all items (default)
+        // todoItems.forEach(item => { if (item.listId === selectedList.value) createToDoElement(item) }); // only draw selected list items
+    }
+    // empty the list before drawing
+
+}
+
+// Iterate through and draw all todo-items from localstorage to the DOM
+// Start the app, draw selected to-do items
+drawTodoItems();

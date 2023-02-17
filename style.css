@@ -10,3 +10,30 @@
 #form-wrapper {
     background-color: goldenrod !important;
 }
+
+#form-todo-items {
+    display: flex;
+}
+
+.todo-section-header {
+    background-color: goldenrod !important;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.todo-list-section-header {
+    background-color: goldenrod !important;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#form-submit-btn {
+    font-size: 18px;
+
+}
