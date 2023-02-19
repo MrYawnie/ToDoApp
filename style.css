@@ -52,6 +52,10 @@
 
 }
 
+#hide-button {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .todo-section-header {
         flex-direction: column;
@@ -63,5 +67,13 @@
 
     .todo-list-section-header {
         flex-direction: column;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+
+    #hide-button {
+        display: block;
     }
 }

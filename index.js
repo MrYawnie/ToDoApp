@@ -6,9 +6,12 @@ const todoListsContainer = document.getElementById('todo-lists-container');
 const todoListForm = document.getElementById('form-todo-lists');
 const todoListInput = todoListForm['todo-list'];
 
+const hideElement = () => {
+    const element = document.getElementById('list-section-container');
+    element.classList.toggle('mobile-hide');
+}
 
 const incorrectEntry = document.getElementById('incorrect-entry');
-
 
 const randomId = () => Math.floor(Math.random() * 100000000);
 
