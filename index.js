@@ -8,7 +8,10 @@ const todoListInput = todoListForm['todo-list'];
 
 const hideElement = () => {
     const element = document.getElementById('list-section-container');
+    const toggleBtnIcon = document.getElementById('toggle-button-icon')
     element.classList.toggle('mobile-hide');
+    toggleBtnIcon.classList.toggle('bi-x');
+    toggleBtnIcon.classList.toggle('bi-list');
 }
 
 const incorrectEntry = document.getElementById('incorrect-entry');
