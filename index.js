@@ -254,11 +254,13 @@ const createToDoListElement = ({ name, id }) => {
     // remove lists when remove button is clicked
     todoListRemoveButton.onclick = function () {
         removeList();
+        drawTodoItems();
     }
 
     // remove to-do items when double clicked, save status to localStorage
     todoListElement.ondblclick = function () {
         removeList();
+        drawTodoItems();
     }
 
     // show remove button when mouse over to-do items
