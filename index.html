@@ -12,15 +12,13 @@
 </head>
 
 <body>
-    <div class="container text-center">
-        <div class="title">
-            <h1>ToDo App</h1>
-        </div>
+    <div class="container text-center mt-4">
         <div class="row">
             <div class="col-md-4 border">
                 <div class="list-header-area d-flex justify-content-center">
-                    <h2 class="mx-2">ToDo Lists</h2>
-                    <button class="btn btn-sm border mx-2" id="hide-button" onclick="hideElement()"><i class="bi bi-x" id="toggle-button-icon"></i></button>
+                    <h2 class="mx-2 w-100">ToDo Lists</h2>
+                    <button class="btn btn-sm border mx-2 flex-shrink-1" id="hide-button" onclick="hideElement()"><i class="bi bi-x"
+                            id="toggle-button-icon"></i></button>
                 </div>
                 <div id="list-section-container">
                     <div class="todo-list-section-header">
@@ -36,12 +34,12 @@
                 </div>
             </div>
             <div class="col-md-8 border">
-                <h2>ToDo Items</h2>
+                <h2 id="selected-list">ToDo Items</h2>
                 <div class="todo-section-header">
                     <form id="form-todo-items" action="" class="">
                         <input type="submit" value="+" class="border-end-0 rounded-start m-0 form-submit-btn">
                         <input id="todo-item-input" type="text" class="rounded-end form-label m-0" name="todo-item"
-                            placeholder="Add ToDo Item"><span id="incorrect-entry"></span>
+                            placeholder="Add ToDo Item">
                     </form>
                     <div class="btn-group-sm" role="group" onchange="return drawTodoItems()">
                         <input type="radio" class="btn-check" name="filter" id="filter-all-tasks" checked>

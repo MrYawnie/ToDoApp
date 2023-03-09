@@ -1,3 +1,4 @@
+// Import elements from HTML
 const todoItemsContainer = document.getElementById('todo-items-container');
 const todoItemForm = document.getElementById('form-todo-items');
 const todoItemInput = todoItemForm['todo-item'];
@@ -6,6 +7,9 @@ const todoListsContainer = document.getElementById('todo-lists-container');
 const todoListForm = document.getElementById('form-todo-lists');
 const todoListInput = todoListForm['todo-list'];
 
+const selectedList = document.getElementById('selected-list');
+
+// Toggle button to hide the sidepanel on mobile view
 const hideElement = () => {
     const element = document.getElementById('list-section-container');
     const toggleBtnIcon = document.getElementById('toggle-button-icon')
@@ -14,10 +18,10 @@ const hideElement = () => {
     toggleBtnIcon.classList.toggle('bi-list');
 }
 
-const incorrectEntry = document.getElementById('incorrect-entry');
-
+// Get random Id for both todo items and todo lists
 const randomId = () => Math.floor(Math.random() * 100000000);
 
+// Get todo items and todo lists from localStorage, or create default tutorial items if none exist
 const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [{
     name: 'Click to toggle between complete / uncomplete',
     id: randomId(),
@@ -53,6 +57,17 @@ const todoItems = JSON.parse(localStorage.getItem('todoItems')) || [{
     id: randomId(),
     listId: 987654321,
     complete: false
+}, {
+    name: 'You may collapse the sidepanel by clicking the toggle button ⬆',
+    id: randomId(),
+    listId: 123454321,
+    complete: false
+}
+, {
+    name: 'The collapse feature is only available on mobile view.',
+    id: randomId(),
+    listId: 123454321,
+    complete: false
 }
 ];
 const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [{
@@ -61,12 +76,26 @@ const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [{
 }, {
     name: 'Click to open secondary lists',
     id: 987654321
-}];
+}, {
+    name: 'Introducing mobile view!',
+    id: 123454321
+}
+];
 
 // active list
 const activeList = () => {
     const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
     return parseInt(checkedList.id);
+}
+
+// Name of active list, to show on the top of the to-do list
+const activeListName = () => {
+    // find selected list element
+    const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
+    // get list name from localstorage, matching the checked list id
+    const listName = todoLists.find(list => list.id === parseInt(checkedList.id)).name;
+    return listName;
+   
 }
 
 // Save to-do items to localStorage
@@ -95,6 +124,7 @@ const addList = (name, id) => {
     return { name, id };
 }
 
+// Count to-do items left
 const todoItemsLeftCount = () => {
     const todoItemsLeft = todoItems.filter(item => !item.complete && item.listId === activeList()).length;
     const todoItemsLeftSpan = document.getElementById('todo-items-count');
@@ -133,8 +163,9 @@ const createToDoElement = ({ name, id, listId, complete }) => {
     todoItemRemoveButton.classList.add('remove');
     todoItemRemoveButton.innerText = 'Remove';
     todoItemRemoveButton.style.display = 'none';
+    
+    // Create remove functionality for remove button
     todoItemRemoveButton.onclick = function () {
-        console.log('clicked');
         this.parentElement.parentElement.remove();
         let index = todoItems.findIndex(item => item.id === id);
         todoItems.splice(index, 1);
@@ -145,7 +176,6 @@ const createToDoElement = ({ name, id, listId, complete }) => {
 
     // remove to-do items when double clicked, save status to localStorage
     todoItemElement.ondblclick = function () {
-        console.log('double clicked');
         this.remove();
         let index = todoItems.findIndex(item => item.id === id);
         todoItems.splice(index, 1);
@@ -155,13 +185,11 @@ const createToDoElement = ({ name, id, listId, complete }) => {
 
     // show remove button when mouse over to-do items
     todoItemElement.onmouseover = function () {
-        console.log('mouse over');
         todoItemRemoveButton.style.display = 'inline-block';
     }
 
     // hide remove button when mouse out to-do items
     todoItemElement.onmouseout = function () {
-        console.log('mouse out');
         todoItemRemoveButton.style.display = 'none';
     }
 
@@ -202,7 +230,7 @@ const createToDoListElement = ({ name, id }) => {
     todoListRadio.classList.add('form-check-input');
     let i = todoLists.findIndex(list => list.id === id);
     if (i === 0) {
-        todoListRadio.setAttribute('checked', 'checked');
+        todoListRadio.setAttribute('checked', 'checked'); 
     }
     todoListRadio.classList.add('visually-hidden');
     
@@ -222,33 +250,24 @@ const createToDoListElement = ({ name, id }) => {
     todoListRemoveButton.classList.add('remove');
     todoListRemoveButton.innerText = 'Remove';
     todoListRemoveButton.style.display = 'none';
-    todoListRemoveButton.onclick = function () {
-        console.log('clicked');
-        this.parentElement.parentElement.remove();
-        let index = todoLists.findIndex(item => item.id === id);
-        todoLists.splice(index, 1);
-        localStorage.setItem('todoLists', JSON.stringify(todoLists));
-    }
 
+    // remove lists when remove button is clicked
+    todoListRemoveButton.onclick = function () {
+        removeList();
+    }
 
     // remove to-do items when double clicked, save status to localStorage
     todoListElement.ondblclick = function () {
-        console.log('double clicked');
-        this.remove();
-        let index = todoLists.findIndex(item => item.id === id);
-        todoLists.splice(index, 1);
-        localStorage.setItem('todoLists', JSON.stringify(todoLists));
+        removeList();
     }
 
     // show remove button when mouse over to-do items
     todoListElement.onmouseover = function () {
-        console.log('mouse over');
         todoListRemoveButton.style.display = 'inline-block';
     }
 
     // hide remove button when mouse out to-do items
     todoListElement.onmouseout = function () {
-        console.log('mouse out');
         todoListRemoveButton.style.display = 'none';
     }
 
@@ -256,6 +275,19 @@ const createToDoListElement = ({ name, id }) => {
     todoListElement.appendChild(todoListWrapper);
     todoListWrapper.append(todoListRadio, todoListLabel, todoListRemoveButton);
     todoListsContainer.appendChild(todoListElement);
+
+    // reusable remove list function, called by double clicking list element or pressing remove button
+    const removeList = () => {
+        todoListElement.remove();
+        let index = todoLists.findIndex(item => item.id === id);
+        todoLists.splice(index, 1);
+        localStorage.setItem('todoLists', JSON.stringify(todoLists));
+
+        // also delete all deleted list items from localStorage
+        let listItems = JSON.parse(localStorage.getItem('todoItems'));
+        let listItemsFiltered = listItems.filter(item => item.listId !== id);
+        localStorage.setItem('todoItems', JSON.stringify(listItemsFiltered));
+    }
 }
 
 // Add new item to to-do list
@@ -263,12 +295,14 @@ todoItemForm.onsubmit = (e) => {
     e.preventDefault();
 
     if (todoItemInput.value === '' || todoItemInput.value.length < 3) {
-        incorrectEntry.innerText = ' * Please enter a valid to-do item (over 2 char)';
         todoItemInput.style.border = '3px solid red';
+        todoItemInput.placeholder = 'Minimum 3 characters!';
+        todoItemInput.value = '';
         return;
     }
-    incorrectEntry.innerText = '';
     todoItemInput.style.border = '';
+    todoItemInput.placeholder = 'Add ToDo Item';
+
     const newItem = addItem(
         todoItemInput.value,
         randomId(),
@@ -285,12 +319,15 @@ todoListForm.onsubmit = (e) => {
     e.preventDefault();
 
     if (todoListInput.value === '' || todoListInput.value.length < 3) {
-        // incorrectEntry.innerText = ' * Please enter a valid to-do List (over 2 char)';
         todoListInput.style.border = '3px solid red';
+        todoListInput.placeholder = 'Minimum 3 characters!';
+        todoListInput.value = '';
         return;
     }
-    // incorrectEntry.innerText = '';
+
     todoListInput.style.border = '';
+    todoListInput.placeholder = 'Add ToDo List';
+
     const newList = addList(
         todoListInput.value,
         randomId()
@@ -301,29 +338,27 @@ todoListForm.onsubmit = (e) => {
     todoListForm.reset();
 }
 
+// Draw todo items on screen
 const drawTodoItems = () => {
     const drawActiveTasks = document.getElementById('filter-active-tasks').checked;
     const drawCompletedTasks = document.getElementById('filter-completed-tasks').checked;
+    selectedList.innerText = activeListName();
 
     todoItemsContainer.innerHTML = ''; // empty the list before drawing again
 
-    if (drawActiveTasks) {
+    if (drawActiveTasks) { // filter and draw only the active tasks
         todoItems.forEach(item => { if (!item.complete && item.listId === activeList()) createToDoElement(item) });
-    } else if (drawCompletedTasks) {
+    } else if (drawCompletedTasks) { // filter and draw only the completed tasks
         todoItems.forEach(item => { if (item.complete && item.listId === activeList()) createToDoElement(item) });
-    } else {
-        // todoItems.forEach(createToDoElement); // draw all items (default)
+    } else { // draw all tasks in the selected list
         todoItems.forEach(item => { if (item.listId === activeList()) createToDoElement(item) }); // only draw selected list items
     }
-    // empty the list before drawing
-
 }
 
 const drawTodoListItems = () => {
     todoLists.forEach(createToDoListElement); // draw all items (default)
 }
 
-// Iterate through and draw all todo-items from localstorage to the DOM
 // Start the app, draw selected to-do items
 drawTodoItems();
 drawTodoListItems();

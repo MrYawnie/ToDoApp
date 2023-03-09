@@ -56,6 +56,12 @@
     display: none;
 }
 
+@media screen and (min-width: 768px) {
+    .desktop-visually-hidden {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .todo-section-header {
         flex-direction: column;
@@ -77,3 +83,5 @@
         display: block;
     }
 }
+
+
