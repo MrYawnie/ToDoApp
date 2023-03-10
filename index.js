@@ -85,7 +85,14 @@ const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [{
 // active list
 const activeList = () => {
     const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
-    return parseInt(checkedList.id);
+    if (checkedList === undefined) {
+        todoItemInput.style.border = '3px solid red';
+        todoItemInput.placeholder = 'Add a list first!';
+        todoItemInput.value = '';
+        throw new Error('No list selected'); // this is to throw a custom error message to console log, if no list is selected
+    } else {
+        return parseInt(checkedList.id);
+    }
 }
 
 // Name of active list, to show on the top of the to-do list
