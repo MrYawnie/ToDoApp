@@ -25,7 +25,7 @@
                         <form id="form-todo-lists" action="" class="">
                             <input type="button" value="+" class="border-end-0 rounded-start m-0 form-submit-btn">
                             <input type="text" id="todo-list-input" class="rounded-end form-label m-0" name="todo-list"
-                                placeholder="New ToDo List">
+                                placeholder="Add a new list...">
                         </form>
                     </div>
                     <ul class="list-group py-2" id="todo-lists-container" onchange="return drawTodoItems()">
@@ -39,7 +39,7 @@
                     <form id="form-todo-items" action="" class="">
                         <input type="submit" value="+" class="border-end-0 rounded-start m-0 form-submit-btn">
                         <input id="todo-item-input" type="text" class="rounded-end form-label m-0" name="todo-item"
-                            placeholder="Add ToDo Item">
+                            placeholder="Add a new to-do item...">
                     </form>
                     <div class="btn-group-sm" role="group" onchange="return drawTodoItems()">
                         <input type="radio" class="btn-check" name="filter" id="filter-all-tasks" checked>

@@ -82,6 +82,8 @@ const todoLists = JSON.parse(localStorage.getItem('todoLists')) || [{
 }
 ];
 
+
+
 // active list
 const activeList = () => {
     const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
@@ -89,8 +91,11 @@ const activeList = () => {
         todoItemInput.style.border = '3px solid red';
         todoItemInput.placeholder = 'Add a list first!';
         todoItemInput.value = '';
-        throw new Error('No list selected'); // this is to throw a custom error message to console log, if no list is selected
+        todoItemInput.disabled = true;
     } else {
+        todoItemInput.style.border = '';
+        todoItemInput.placeholder = 'Add a new to-do item...';
+        todoItemInput.disabled = false;
         return parseInt(checkedList.id);
     }
 }
@@ -100,9 +105,8 @@ const activeListName = () => {
     // find selected list element
     const checkedList = document.querySelector('input[name = "list-item-radio"]:checked') || todoLists[0];
     // get list name from localstorage, matching the checked list id
-    const listName = todoLists.find(list => list.id === parseInt(checkedList.id)).name;
+    const listName = todoLists.find(list => list.id === parseInt(checkedList.id))?.name || (todoLists[0]?.name || 'No list selected');
     return listName;
-   
 }
 
 // Save to-do items to localStorage
@@ -310,7 +314,7 @@ todoItemForm.onsubmit = (e) => {
         return;
     }
     todoItemInput.style.border = '';
-    todoItemInput.placeholder = 'Add ToDo Item';
+    todoItemInput.placeholder = 'Add a new to-do item...';
 
     const newItem = addItem(
         todoItemInput.value,
@@ -319,6 +323,7 @@ todoItemForm.onsubmit = (e) => {
     );
 
     createToDoElement(newItem);
+    drawTodoItems();
 
     todoItemForm.reset();
 }
@@ -335,7 +340,7 @@ todoListForm.onsubmit = (e) => {
     }
 
     todoListInput.style.border = '';
-    todoListInput.placeholder = 'Add ToDo List';
+    todoListInput.placeholder = 'Add a new list...';
 
     const newList = addList(
         todoListInput.value,
@@ -343,6 +348,7 @@ todoListForm.onsubmit = (e) => {
     );
 
     createToDoListElement(newList);
+    drawTodoItems();
 
     todoListForm.reset();
 }
@@ -366,6 +372,8 @@ const drawTodoItems = () => {
 
 const drawTodoListItems = () => {
     todoLists.forEach(createToDoListElement); // draw all items (default)
+    activeListName();
+    activeList();
 }
 
 // Start the app, draw selected to-do items
